@@ -1,0 +1,69 @@
+---
+title: "HW3"
+author: "Aditya"
+date: "November 26, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+######Q1
+```{r}
+
+ # mkdir Unit3 
+ # cd Unit3 
+ # git clone https://github.com/caesar0301/awesome-public-datasets
+
+```
+######Q2
+```{r}
+titanic = read.csv("C:/Users/garapati/Desktop/MSDS_DDS/Week3/titanic.csv")
+sum(titanic$Sex=="male")
+sum(titanic$Sex=="female")
+plot(titanic$Sex)
+titanic[is.na(titanic)] <- 0
+c <- list(Age = titanic$Age, Fare = titanic$Fare, Survived = titanic$Survived)
+lapply(c,mean)
+```
+######Q3
+```{r}
+df1 = read.csv("C:/Users/garapati/Desktop/MSDS_DDS/Week3/sleep_data_01.csv")
+sleepstudy <- function(df) {  
+age <- c(df$Age)
+medi <- median(age,na.rm=T)
+maximum <- lapply(df,max,na.rm=TRUE)
+minimum <-  lapply(df,min,na.rm=TRUE)
+mean <-   lapply(df,mean,na.rm=TRUE)
+stddev <- lapply(df,sd,na.rm=TRUE)
+r <- diff(c(range(df$Duration,na.rm = TRUE)))
+report <-data.frame(Median_Age=medi, Mean =mean$RSES , SD =stddev$RSES, range = r)
+report$Mean = report$Mean/5
+report$SD = report$SD/5
+
+colnames(report) <- c("MedianAge","SelfEsteem","SE_SD","DurationRange")
+report <- round(report,2)
+return(report)
+}
+sleepstudy(df1)
+```
+######Q4&Q5
+```{r}
+
+library(fivethirtyeight)
+data(package = "fivethirtyeight")
+df <- college_recent_grads
+# dimensions
+dim(df)
+# column names
+colnames(df)
+library(plyr)
+majorcat <- count(df, 'major_category')
+major_category <- as.data.frame(majorcat)
+par(las=2)
+barplot(major_category$freq, names = major_category$major_category, ylab = "Frequency", main = "College Majors", col="blue")
+
+write.csv(college_recent_grads, file = "college_recent_grads.csv", row.names=FALSE)
+```
+
+
