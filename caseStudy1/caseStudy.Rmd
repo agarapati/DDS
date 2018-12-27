@@ -1,0 +1,43 @@
+---
+title: 'Brewery Study '
+output:
+  html_document:
+    df_print: paged
+---
+
+
+install.packages("car")
+library("car"")
+```{r}
+library(readr)
+beers_df <- read_csv("C:/Users/garapati/Desktop/MSDS_DDS/CaseStady_1/Beers.csv")
+brewery_df <- read_csv("C:/Users/garapati/Desktop/MSDS_DDS/CaseStady_1/Breweries.csv")
+brewery_df <-setNames(brewery_df,c("Brewery_id","Name","City","State"))
+brewery_data <-merge.data.frame(brewery_df,beers_df,by="Brewery_id")
+na_count <-sapply(brewery_data, function(y) sum(length(which(is.na(y)))))
+data.frame(na_count)
+```
+```{r}
+library(dplyr)
+brewery_data_clean <- na.omit(brewery_data)
+aggregate(brewery_data_clean$IBU,by=list(brewery_data_clean$State),FUN=median)
+aggregate(brewery_data_clean$ABV,by=list(brewery_data_clean$State),FUN=median)
+slice <- brewery_data[which.max(brewery_data$ABV),]
+print(slice$State)
+slice <- brewery_data[which.max(brewery_data$IBU),]
+print(slice$State)
+summary(brewery_data$ABV)
+```
+
+
+```{r}
+library(ggplot2)
+plot1 <- theme(plot.title = element_text(face = "bold.italic",size= 12, color = "red",hjust=0.5), axis.text.x = element_text(size = 6, face ="bold.italic"), axis.text.y = element_text(size=6,face = "bold.italic"))
+ggplot(data = brewery_data_clean, aes(x = brewery_data_clean$State, y = brewery_data_clean$ABV, fill=State), horis=False)+geom_bar(stat = "identity")+labs(title = "ABV Data", x="States",y="ABV")+plot1
+
+ggplot(data = brewery_data_clean, aes(x = brewery_data_clean$State, y = brewery_data_clean$IBU, fill=State), horis=False)+geom_bar(stat = "identity")+labs(title = "IBU Data", x="States",y="IBU")+plot1+ylim(0,180)
+library(car)
+scatterplot(x=brewery_data_clean$IBU,y=brewery_data_clean$ABV,ellipse=T)
+```
+
+
